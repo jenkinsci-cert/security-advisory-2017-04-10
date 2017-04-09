@@ -34,9 +34,15 @@ void check(Item item) {
 	if (pub.classpath != null && !pub.classpath.isEmpty()) {
 		noteItem(item, 'Email Extension: Classpath')
 	}
+	if (pub.defaultContent != null && (pub.defaultContent.contains('${SCRIPT') || pub.defaultContent.contains('${JELLY_SCRIPT'))) {
+		noteItem(item, 'Email Extension: Template Use in Default Body')
+	}
 	pub.configuredTriggers.each { trigger ->
 		if (trigger instanceof hudson.plugins.emailext.plugins.trigger.AbstractScriptTrigger) {
 			noteItem(item, 'Email Extension: ' + trigger.descriptor.displayName)
+		}
+		if (trigger.email.body != null && (trigger.email.body.contains('${SCRIPT') || trigger.email.body.contains('${JELLY_SCRIPT'))) {
+			noteItem(item, 'Email Extension: Template Use in Body of Trigger: ' + trigger.descriptor.displayName)
 		}
 	}
 }
